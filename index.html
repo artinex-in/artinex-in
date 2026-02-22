@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artinex | Digital Reality</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050b14;
+            color: #cbd5e1; /* slate-300 */
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a1120;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Utility for hiding elements */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Notification Animations */
+    .toast-enter { transform: translateX(120%); }
+    .toast-active { transform: translateX(0); }
+    
+    /* Smooth transition for the estimator bar */
+    #cost-bar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    
+    /* Custom Scrollbar for Chat/Admin */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    ::-webkit-scrollbar-thumb { background: #0891b2; border-radius: 10px; }
+
+    </style>
+</head>
+<body class="selection:bg-cyan-500 selection:text-white min-h-screen relative overflow-x-hidden">
+
+    <!-- GLOBAL SMOOTH BACKGROUND -->
+    <div class="fixed inset-0 z-0 bg-[#050b14] pointer-events-none">
+        <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-900/20 blur-[120px]"></div>
+        <div class="absolute -bottom-[20%] left-[20%] w-[60%] h-[60%] rounded-full bg-cyan-900/20 blur-[120px]"></div>
+        <div class="absolute top-[10%] right-[0%] w-[40%] h-[40%] rounded-full bg-slate-800/20 blur-[100px]"></div>
+        <div class="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+    </div>
+
+    <!-- ==================== MAIN WEBSITE VIEW ==================== -->
+    <div id="website-view" class="relative z-10 transition-opacity duration-300">
+        
+        <!-- Navigation -->
+        <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-6 bg-transparent">
+            <div class="container mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToSection('hero')">
+                <img src="./assets/Artinex.png" alt="Logo" class="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]"> 
+                    <span class="text-2xl font-bold text-white tracking-tight">Artinex</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <button onclick="scrollToSection('hero')" class="text-slate-300 hover:text-cyan-400 font-medium transition-colors text-sm uppercase tracking-wider">Home</button>
+                    <button onclick="scrollToSection('services')" class="text-slate-300 hover:text-cyan-400 font-medium transition-colors text-sm uppercase tracking-wider">Services</button>
+                    <button onclick="scrollToSection('about')" class="text-slate-300 hover:text-cyan-400 font-medium transition-colors text-sm uppercase tracking-wider">About</button>
+                    <button onclick="scrollToSection('portfolio')" class="text-slate-300 hover:text-cyan-400 font-medium transition-colors text-sm uppercase tracking-wider">Portfolio</button>
+                    <button onclick="scrollToSection('contact')" class="px-6 py-2.5 border border-cyan-500/50 text-cyan-400 rounded-full font-medium hover:bg-cyan-500/10 hover:text-cyan-300 transition-all shadow-lg shadow-cyan-900/20">Contact Us</button>
+                </div>
+
+                <!-- Mobile Toggle -->
+                <button class="md:hidden text-white" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[#050b14]/95 backdrop-blur-xl border-t border-white/10 py-6 px-6 flex flex-col space-y-4 shadow-2xl">
+                <button onclick="scrollToSection('hero')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-white/5">Home</button>
+                <button onclick="scrollToSection('services')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-white/5">Services</button>
+                <button onclick="scrollToSection('about')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-white/5">About</button>
+                <button onclick="scrollToSection('portfolio')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-white/5">Portfolio</button>
+                <button onclick="scrollToSection('contact')" class="text-left text-lg font-medium text-slate-300 hover:text-cyan-400 py-2 border-b border-white/5">Contact</button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20">
+            <div class="container mx-auto px-6 relative z-20 text-center">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight leading-tight drop-shadow-2xl">
+                    Turning Ideas into <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">Digital Reality</span>
+                </h1>
+                <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    We engineer robust digital solutions that scale. From AI-powered tools to immersive web experiences, Artinex bridges the gap between concept and code.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                    <button onclick="scrollToSection('contact')" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full font-bold hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-1">Get a Quote</button>
+                    <button onclick="scrollToSection('portfolio')" class="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-full font-bold hover:bg-white/10 hover:border-cyan-500/50 transition-all backdrop-blur-sm">View Portfolio</button>
+                </div>
+
+                <!-- AI Architect -->
+                <div class="mt-12 max-w-4xl mx-auto bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-1 hover:border-cyan-500/30 transition-colors">
+                    <div class="bg-[#050b14]/50 rounded-xl p-8 relative overflow-hidden group text-left">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <i data-lucide="bot" class="w-24 h-24"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                            <i data-lucide="sparkles" class="text-cyan-400 w-6 h-6"></i> Artinex AI Architect
+                        </h3>
+                        <p class="text-slate-400 mb-6">Have an app idea? Describe it below and let our AI generate an instant project blueprint.</p>
+                        
+                        <div class="flex flex-col md:flex-row gap-4 mb-6">
+                            <input type="text" id="ai-idea-input" placeholder="e.g., A fitness app that uses camera to correct posture..." class="flex-1 bg-white/5 border border-white/10 text-white px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500/50 outline-none placeholder:text-slate-600">
+                            <button onclick="generateBlueprint()" id="ai-generate-btn" class="bg-cyan-600 hover:bg-cyan-500 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-cyan-900/20">
+                                <i data-lucide="wand-2" class="w-5 h-5"></i> Generate Blueprint
+                            </button>
+                        </div>
+
+                        <!-- Result Container -->
+                        <div id="ai-result" class="hidden mt-6 bg-white/5 rounded-lg p-6 border border-cyan-500/20 animate-fade-in">
+                            <h4 id="ai-project-name" class="text-xl font-bold text-cyan-400 mb-2"></h4>
+                            <p id="ai-summary" class="text-slate-300 mb-4 italic"></p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-white text-sm uppercase tracking-wide mb-2">Key Features</h5>
+                                    <ul id="ai-features" class="list-disc list-inside text-slate-400 text-sm space-y-1"></ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white text-sm uppercase tracking-wide mb-2">Recommended Stack</h5>
+                                    <div id="ai-stack" class="flex flex-wrap gap-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 relative">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col lg:flex-row gap-16 items-center">
+                    <!-- Text Side (Left) -->
+                    <div class="w-full lg:w-1/2 space-y-8 order-2 lg:order-1">
+                        <div>
+                            <span class="text-cyan-400 font-bold tracking-wider uppercase text-sm mb-2 block drop-shadow-lg">About Artinex</span>
+                            <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">Empowering Businesses Through <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Technology</span></h2>
+                            <p class="text-slate-400 text-lg leading-relaxed">
+                                Founded by Naveen, Artinex is your strategic technology partner. With a deep foundation in Artificial Intelligence, Full-stack Development, and Creative Design, we bridge the gap between complex technology and user-centric experiences.
+                            </p>
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-8 pt-4">
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 text-cyan-400 shadow-inner backdrop-blur-sm">
+                                    <i data-lucide="globe" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg mb-1">Our Mission</h4>
+                                    <p class="text-slate-500 text-sm">Reshaping perception through innovative design & robust tech.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 text-cyan-400 shadow-inner backdrop-blur-sm">
+                                    <i data-lucide="check-circle" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg mb-1">Our Values</h4>
+                                    <p class="text-slate-500 text-sm">Creativity, Technical Excellence, and Problem-Solving.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-8 border-t border-white/10 flex flex-wrap gap-12">
+                            <div><span class="block text-4xl font-bold text-white">10+</span><span class="text-cyan-500 text-sm font-medium tracking-wide uppercase">Projects Done</span></div>
+                            <div><span class="block text-4xl font-bold text-white">1+</span><span class="text-cyan-500 text-sm font-medium tracking-wide uppercase">Years Exp</span></div>
+                            <div><span class="block text-4xl font-bold text-white">100%</span><span class="text-cyan-500 text-sm font-medium tracking-wide uppercase">Satisfaction</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Image Side (Right) -->
+                    <div class="w-full lg:w-1/2 relative order-1 lg:order-2 px-4 md:px-0">
+    <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+        <div class="bg-[#0a1120] aspect-square lg:aspect-[4/5] flex items-center justify-center p-6 md:p-12 relative overflow-hidden group">
+            
+            <div class="absolute inset-0 bg-cyan-500/10 animate-pulse transition-opacity duration-1000"></div>
+            <div class="absolute inset-0 bg-cyan-600/5 group-hover:bg-cyan-600/10 transition-colors duration-500"></div>
+            
+            <div class="relative z-20 animate-float w-full max-w-[280px] sm:max-w-md">
+                <img 
+                    src="./assets/tag.png" 
+                    alt="Technology Interface" 
+                    class="w-full h-auto drop-shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-transform duration-700 group-hover:scale-110"
+                />
+            </div>
+
+            <div class="absolute bottom-6 flex flex-col items-center justify-center pointer-events-none">
+                <span class="text-3xl md:text-6xl font-bold text-white tracking-widest opacity-5 select-none"></span>
+            </div>
+        </div>
+    </div>
+</div>                </div>
+            </div>
+        </section>
+
+        <section id="services" class="pt-[10px] pb-24">
+    <div class="container mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <span class="text-cyan-400 font-semibold tracking-wider uppercase text-sm drop-shadow-lg">What We Do</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-white mt-2 mb-4">Our Services</h2>
+            <div class="w-20 h-1 bg-cyan-600 mx-auto rounded-full shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="services-grid">
+            </div>
+    </div>
+</section>
+
+        <!-- Cost Estimator -->
+        <section class="py-24 relative bg-white/5 border-y border-white/5 backdrop-blur-sm">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <span class="text-cyan-400 font-bold tracking-wider uppercase text-sm drop-shadow-lg">Pricing</span>
+                        <h2 class="text-3xl md:text-5xl font-bold text-white mt-2 mb-6">Estimate Your Project</h2>
+                        <p class="text-slate-400 text-lg mb-8">Get a quick ballpark figure for your idea. Select your project type, complexity, and desired features to see an estimated range.</p>
+                        <div class="flex gap-4 items-center text-slate-300">
+                            <i data-lucide="calculator" class="text-cyan-400 w-8 h-8"></i>
+                            <span class="text-sm">Note: This is a rough estimate. based on the project.</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#0a1120] border border-white/10 rounded-2xl p-8 shadow-2xl">
+                        <div class="space-y-6">
+                            <!-- Project Type -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-3">Project Type</label>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="estimator-types">
+                                    <button onclick="updateEstimator('service', 'web')" class="estimator-btn service-btn py-2 rounded-lg text-sm font-bold uppercase transition-all bg-cyan-600 text-white" data-value="web">final</button>
+                                    <button onclick="updateEstimator('service', 'mobile')" class="estimator-btn service-btn py-2 rounded-lg text-sm font-bold uppercase transition-all bg-white/5 text-slate-400 hover:bg-white/10" data-value="mobile">Design</button>
+                                    <button onclick="updateEstimator('service', 'ai')" class="estimator-btn service-btn py-2 rounded-lg text-sm font-bold uppercase transition-all bg-white/5 text-slate-400 hover:bg-white/10" data-value="ai">Meta Ads</button>
+                                    <button onclick="updateEstimator('service', 'uiux')" class="estimator-btn service-btn py-2 rounded-lg text-sm font-bold uppercase transition-all bg-white/5 text-slate-400 hover:bg-white/10" data-value="uiux">UI/UX</button>
+                                </div>
+                            </div>
+
+                            <!-- Complexity -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-3">Complexity</label>
+                                <div class="flex gap-4" id="estimator-complexities">
+                                    <button onclick="updateEstimator('complexity', 'low')" class="estimator-btn complex-btn flex-1 py-2 rounded-lg text-sm font-bold uppercase border transition-all border-white/10 text-slate-500 hover:border-white/30" data-value="low">Low</button>
+                                    <button onclick="updateEstimator('complexity', 'medium')" class="estimator-btn complex-btn flex-1 py-2 rounded-lg text-sm font-bold uppercase border transition-all border-cyan-500 text-cyan-400 bg-cyan-900/20" data-value="medium">Medium</button>
+                                    <button onclick="updateEstimator('complexity', 'high')" class="estimator-btn complex-btn flex-1 py-2 rounded-lg text-sm font-bold uppercase border transition-all border-white/10 text-slate-500 hover:border-white/30" data-value="high">High</button>
+                                </div>
+                            </div>
+
+                            <!-- Addons -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-3">Add-ons</label>
+                                <div class="grid grid-cols-2 gap-3" id="estimator-features">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <div class="pt-6 border-t border-white/10">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-slate-400">Estimated Cost</span>
+                                    <span id="estimated-cost-display" class="text-3xl font-bold text-white">$2,000</span>
+                                </div>
+                                <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                                    <div id="cost-bar" class="bg-gradient-to-r from-blue-500 to-cyan-500 h-full transition-all duration-500" style="width: 13%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="py-0 relative overflow-hidden">
+            <div class="container mx-auto px-6 relative z-10">
+                
+                <div class="grid md:grid-cols-2 gap-10" id="portfolio-grid">
+                    <!-- Projects injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-16">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white mb-8">Why Choose <span class="te
+                            xt-cyan-400">Artinex?</span></h2>
+                        <div class="space-y-6">
+                            <div class="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div class="mt-1"><i data-lucide="check-circle" class="text-cyan-400"></i></div>
+                                <div><h4 class="font-bold text-white text-lg">Quality Assurance</h4><p class="text-slate-400 text-sm">Rigorous testing and clean code practices ensure robust deliverables.</p></div>
+                            </div>
+                            <div class="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div class="mt-1"><i data-lucide="clock" class="text-cyan-400"></i></div>
+                                <div><h4 class="font-bold text-white text-lg">Timely Delivery</h4><p class="text-slate-400 text-sm">We respect deadlines and follow agile methodologies for faster time-to-market.</p></div>
+                            </div>
+                            <div class="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div class="mt-1"><i data-lucide="headphones" class="text-cyan-400"></i></div>
+                                <div><h4 class="font-bold text-white text-lg">24/7 Support</h4><p class="text-slate-400 text-sm">Dedicated maintenance and support to ensure your operations never stop.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-bold text-white mb-8">Client <span class="text-cyan-400">Stories</span></h2>
+                        <div class="grid gap-6">
+                            <div class="bg-white/5 p-8 rounded-2xl border border-white/10 relative backdrop-blur-sm">
+                                <i data-lucide="quote" class="absolute top-6 right-6 text-slate-700 w-10 h-10"></i>
+                                <div class="flex text-yellow-500 mb-4">
+                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                </div>
+                                <p class="text-slate-300 mb-6 italic">"Artinex transformed our digital presence. The AI integration they added increased user retention by 10%."</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">S</div>
+                                    <div><h4 class="font-bold text-white text-sm">Siva kumar</h4><p class="text-xs text-slate-500 uppercase">Sivadeepam transport</p></div>
+                                </div>
+                            </div>
+                            <div class="bg-white/5 p-8 rounded-2xl border border-white/10 relative backdrop-blur-sm">
+                                <i data-lucide="quote" class="absolute top-6 right-6 text-slate-700 w-10 h-10"></i>
+                                <div class="flex text-yellow-500 mb-4">
+                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                </div>
+                                <p class="text-slate-300 mb-6 italic">"Professional, timely, and incredibly skilled. The UI/UX redesign they delivered has doubled our user engagement and streamlined our entire customer journey"</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">D</div>
+                                    <div><h4 class="font-bold text-white text-sm">Anand</h4><p class="text-xs text-slate-500 uppercase">Cab service</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 border-t border-white/10">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-5 gap-12">
+                    <div class="lg:col-span-2 space-y-8">
+                        <div>
+                            <span class="text-cyan-400 font-bold tracking-wider uppercase text-sm drop-shadow-lg">Contact Us</span>
+                            <h2 class="text-4xl font-bold text-white mt-2 mb-4">Let's Build Something Great</h2>
+                            <p class="text-slate-400">Ready to turn your idea into reality? Contact us for a free consultation.</p>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-4 text-slate-300"><div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-cyan-400 border border-white/10 backdrop-blur-sm"><i data-lucide="mail" class="w-5 h-5"></i></div><div><p class="text-xs text-slate-500 uppercase font-bold">Email</p><a href="mailto:artinex@gmail.com" class="hover:text-cyan-400 transition-colors">artinexcreative@gmail.com</a></div></div>
+                            <div class="flex items-center gap-4 text-slate-300"><div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-cyan-400 border border-white/10 backdrop-blur-sm"><i data-lucide="phone" class="w-5 h-5"></i></div><div><p class="text-xs text-slate-500 uppercase font-bold">Phone</p><div class="flex flex-col"><a href="tel:9994544211" class="hover:text-cyan-400 transition-colors"></a><a href="tel:9092241425" class="hover:text-cyan-400 transition-colors">+91 909 224 1425</a></div></div></div>
+                            <div class="flex items-center gap-4 text-slate-300"><div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-cyan-400 border border-white/10 backdrop-blur-sm"><i data-lucide="map-pin" class="w-5 h-5"></i></div><div><p class="text-xs text-slate-500 uppercase font-bold">Location</p><span>Coimbatore, Tamil Nadu, India</span></div></div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-3 bg-white/5 p-8 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-md">
+                        <form id="contact-form" action="https://formspree.io/f/mnjbnddg" method="POST" class="space-y-6">
+    
+    <div class="grid md:grid-cols-2 gap-6">
+        <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Name</label>
+            <input type="text" name="name" required 
+                class="w-full px-4 py-3 rounded-lg bg-[#050b14]/50 border border-white/10 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all placeholder:text-slate-600" 
+                placeholder="John Doe">
+        </div>
+        
+        <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Email</label>
+            <input type="email" name="email" required 
+                class="w-full px-4 py-3 rounded-lg bg-[#050b14]/50 border border-white/10 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all placeholder:text-slate-600" 
+                placeholder="john@example.com">
+        </div>
+    </div>
+
+    <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Service Interest</label>
+        <select name="service" class="w-full px-4 py-3 rounded-lg bg-[#050b14]/50 border border-white/10 text-slate-300 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all">
+            <option value="Digital Marketing">Digital Marketing</option>
+            <option value="Graphic Design">Graphic Design</option>
+            <option value="Video Editing">Video Editing</option>
+            <option value="Web Development">Web Development</option>
+        </select>
+    </div>
+
+    <div>
+        <div class="flex justify-between items-end mb-2">
+            <label class="block text-xs font-bold text-slate-500 uppercase">Message</label>
+            <button type="button" onclick="polishMessage()" id="ai-polish-btn" class="text-xs text-cyan-400 flex items-center gap-1 hover:text-cyan-300 disabled:opacity-50">
+                <i data-lucide="sparkles" class="w-3 h-3"></i> AI Polish
+            </button>
+        </div>
+        <textarea id="contact-message" name="message" required rows="4" 
+            class="w-full px-4 py-3 rounded-lg bg-[#050b14]/50 border border-white/10 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all resize-none placeholder:text-slate-600" 
+            placeholder="Tell us about your project requirements..."></textarea>
+    </div>
+
+    <button type="submit" id="submit-btn" 
+        class="w-full py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg font-bold hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-0.5">
+        Send Message
+    </button>
+
+    <div id="form-status" class="hidden"></div>
+</form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-[#020617]/80 text-slate-400 py-12 border-t border-white/5 backdrop-blur-lg">
+            <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded flex items-center justify-center overflow-hidden shadow-lg">
+                     <img src="./assets/Artinex.png" alt="Artinex Logo" class="w-full h-full object-contain"> </div><span class="text-xl font-bold text-white">Artinex</span>
+                </div>
+                <p class="text-sm">© 2025 Artinex Creative. All rights reserved.</p>
+                <div class="flex gap-4 items-center">
+                    <button onclick="switchView('login')" class="text-xs text-slate-600 hover:text-cyan-400 transition-colors uppercase font-bold tracking-wider">.</button>
+                    <a href="#" class="w-8 h-8 flex items-center justify-center bg-white/5 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-all border border-white/5"><i data-lucide="github" class="w-4 h-4"></i></a>
+                    <a href="#" class="w-8 h-8 flex items-center justify-center bg-white/5 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-all border border-white/5"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Chatbot Floating Button -->
+        <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+            <div id="chatbot-window" class="hidden bg-[#0a1120] border border-cyan-500/30 w-80 h-96 rounded-2xl shadow-2xl mb-4 flex flex-col overflow-hidden animate-fade-in">
+                <div class="bg-gradient-to-r from-blue-900 to-cyan-900 p-4 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="bot" class="text-white w-5 h-5"></i>
+                        <span class="font-bold text-white">Artinexbot</span>
+                    </div>
+                    <button onclick="toggleChatbot()" class="text-white/70 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+                <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4">
+                    <div class="flex justify-start">
+                        <div class="max-w-[80%] p-3 rounded-lg text-sm bg-white/10 text-slate-200 rounded-bl-none">
+                            Hi! I'm Artinexbot. How can I help you today?
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 bg-[#050b14] border-t border-white/10 flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Ask me anything..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+                    <button onclick="sendChatMessage()" class="p-2 bg-cyan-600 rounded-full text-white hover:bg-cyan-500 transition-colors">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button onclick="toggleChatbot()" class="w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full shadow-[0_0_20px_rgba(6,182,212,0.5)] flex items-center justify-center text-white hover:scale-105 transition-transform">
+                <i data-lucide="message-square" class="w-7 h-7"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN LOGIN VIEW ==================== -->
+    <div id="admin-login-view" class="hidden min-h-screen bg-[#050b14] flex items-center justify-center p-4 relative z-20">
+    <div class="bg-white/5 border border-white/10 p-8 rounded-2xl w-full max-w-md shadow-2xl backdrop-blur-xl">
+        <div class="flex justify-center mb-6">
+            <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center text-cyan-400 border border-white/10">
+                <i data-lucide="lock" class="w-8 h-8"></i>
+            </div>
+        </div>
+        <h2 class="text-2xl font-bold text-white text-center mb-2">Artinex Admin</h2>
+        <p class="text-slate-400 text-center mb-8 text-sm">Secure Access Portal</p>
+        
+        <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
+            <div class="relative">
+                <i data-lucide="user" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4"></i>
+                <input type="text" id="login-id" required class="w-full bg-[#0a1120] border border-white/10 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 outline-none placeholder:text-slate-600" placeholder="Username or Admin Email">
+            </div>
+
+            <div class="relative" id="password-field-container">
+                <i data-lucide="key" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4"></i>
+                <input type="password" id="login-password" class="w-full bg-[#0a1120] border border-white/10 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 outline-none placeholder:text-slate-600" placeholder="Password">
+            </div>
+
+            <div id="otp-field-container" class="hidden relative">
+                <i data-lucide="shield-check" class="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-500 w-4 h-4"></i>
+                <input type="text" id="login-otp" class="w-full bg-[#0a1120] border border-cyan-500/50 rounded-lg pl-10 pr-4 py-3 text-white focus:border-cyan-500 outline-none placeholder:text-slate-600" placeholder="Enter 6-digit OTP">
+            </div>
+
+            <p id="login-error" class="text-red-400 text-xs ml-1 hidden">Invalid Credentials</p>
+            
+            <div class="flex justify-end">
+                <button type="button" onclick="initiatePasswordChange()" class="text-xs text-cyan-400 hover:text-cyan-300">Forgot Password?</button>
+            </div>
+
+            <button id="admin-submit-btn" class="w-full py-3 bg-cyan-600 text-white rounded-lg font-bold hover:bg-cyan-500 transition-colors shadow-lg shadow-cyan-900/20">Unlock Dashboard</button>
+            <button type="button" onclick="switchView('website')" class="w-full py-3 text-slate-500 hover:text-white transition-colors text-sm">Return to Website</button>
+        </form>
+        
+        <div id="demo-info" class="mt-6 text-center text-[10px] text-slate-600 uppercase tracking-widest">
+            Restricted Admin Access
+        </div>
+    </div>
+</div>
+
+
+    <!-- ==================== ADMIN DASHBOARD VIEW ==================== -->
+    <div id="admin-dashboard-view" class="hidden min-h-screen bg-[#050b14] text-slate-300 flex relative z-20">
+        <!-- Sidebar -->
+        <div class="w-64 border-r border-white/5 p-6 flex flex-col hidden md:flex">
+            <h1 class="text-2xl font-bold text-white mb-10 flex items-center gap-2"><i data-lucide="layout-dashboard" class="text-cyan-400"></i> Artinex</h1>
+            <nav class="space-y-2 flex-1">
+                <button onclick="renderDashboardTab('overview')" class="admin-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors text-slate-400 hover:text-white hover:bg-white/5" data-tab="overview">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i> Overview
+                </button>
+                <button onclick="renderDashboardTab('clients')" class="admin-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors text-slate-400 hover:text-white hover:bg-white/5" data-tab="clients">
+                    <i data-lucide="users" class="w-4 h-4"></i> Clients
+                </button>
+                <button onclick="renderDashboardTab('projects')" class="admin-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors text-slate-400 hover:text-white hover:bg-white/5" data-tab="projects">
+                    <i data-lucide="briefcase" class="w-4 h-4"></i> Projects
+                </button>
+                <button onclick="renderDashboardTab('tasks')" class="admin-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors text-slate-400 hover:text-white hover:bg-white/5" data-tab="tasks">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> Tasks
+                </button>
+                <button onclick="renderDashboardTab('settings')" class="admin-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors text-slate-400 hover:text-white hover:bg-white/5" data-tab="settings">
+                    <i data-lucide="settings" class="w-4 h-4"></i> Settings
+                </button>
+            </nav>
+            <button onclick="switchView('website')" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-white text-sm"><i data-lucide="log-out" class="w-4 h-4"></i> Exit Admin</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8 overflow-y-auto h-screen">
+            <header class="flex justify-between items-center mb-8">
+                <h2 id="dashboard-title" class="text-2xl font-bold text-white capitalize">Overview</h2>
+                <div class="flex items-center gap-4">
+                    <button class="relative p-2 text-slate-400 hover:text-white">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="w-10 h-10 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold">A</div>
+                </div>
+            </header>
+            
+            <div id="dashboard-content">
+                <!-- Content Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+       <script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+    // --- 1. DATA STATE ---
+    const portfolioItems = [ ];
+
+    let clients = [
+        { id: 1, name: "Sarah Johnson", company: "TechStart", email: "sarah@techstart.io", phone: "+1 555-0101" },
+        { id: 2, name: "David Chen", company: "EcoLife", email: "david@ecolife.com", phone: "+1 555-0102" }
+    ];
+
+    let projects = [
+        { id: 101, title: "TechStart AI Platform", clientId: 1, status: "In Progress", deadline: "2023-12-15", amount: 12000, paid: 5000 },
+        { id: 102, title: "EcoLife Mobile App", clientId: 2, status: "Completed", deadline: "2023-10-30", amount: 8000, paid: 8000 }
+    ];
+
+    const servicesData = [
+        { icon: "code", title: "Web Development", description: "Robust frontend and backend solutions." },
+        { icon: "smartphone", title: "Mobile App Development", description: "Native and cross-platform mobile apps." },
+        { icon: "palette", title: "UI/UX Design", description: "Intuitive, aesthetic designs." },
+        { icon: "trending-up", title: "Digital Marketing", description: "Data-driven SEO strategies." },
+        { icon: "shopping-cart", title: "E-commerce", description: "Scalable online stores." },
+        { icon: "database", title: "Custom Software", description: "Tailored business solutions." }
+    ];
+
+    // --- 2. INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+        renderServices();
+        renderPortfolio('All');
+        renderFilters();
+        renderDashboardTab('overview');
+        updateEstimatorDisplay();
+        lucide.createIcons();
+        
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-[#050b14]/80', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-white/5');
+            } else {
+                nav.classList.remove('bg-[#050b14]/80', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-white/5');
+            }
+        });
+
+        // Initialize Form Listener
+        initFormHandler();
+    });
+
+    // --- 3. WEBSITE UI LOGIC ---
+    function scrollToSection(id) {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('mobile-menu').classList.add('hidden');
+    }
+
+    function toggleMobileMenu() {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+
+    function renderServices() {
+        const grid = document.getElementById('services-grid');
+        if(!grid) return;
+        grid.innerHTML = servicesData.map(s => `
+            <div class="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-2 group backdrop-blur-sm">
+                <div class="w-14 h-14 bg-white/5 rounded-xl flex items-center justify-center mb-6 group-hover:bg-cyan-600 transition-colors duration-300 border border-white/5">
+                    <i data-lucide="${s.icon}" class="text-cyan-400 group-hover:text-white transition-colors"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">${s.title}</h3>
+                <p class="text-slate-400 text-sm">${s.description}</p>
+            </div>
+        `).join('');
+    }
+
+
+    function renderPortfolio(filter) {
+        const grid = document.getElementById('portfolio-grid');
+        if(!grid) return;
+        const items = filter === 'All' ? portfolioItems : portfolioItems.filter(i => i.category === filter);
+        grid.innerHTML = items.map(p => `
+            <div class="group bg-white/5 rounded-2xl border border-white/10 overflow-hidden flex flex-col h-full">
+                <div class="h-64 bg-slate-900 flex items-center justify-center relative">
+                    <i data-lucide="${p.icon}" class="w-16 h-16 text-cyan-400 opacity-50 group-hover:scale-110 transition-transform"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-[10px] font-bold uppercase text-cyan-400">${p.category}</span>
+                    <h3 class="text-xl font-bold text-white mt-1 mb-2">${p.title}</h3>
+                    <p class="text-slate-400 text-sm line-clamp-2">${p.description}</p>
+                </div>
+            </div>
+        `).join('');
+        lucide.createIcons();
+    }
+
+    // --- 4. COST ESTIMATOR LOGIC ---
+    let estimatorState = { service: 'web', complexity: 'medium', features: [] };
+    const baseRates = { web: 2000, mobile: 700, ai: 2500, uiux: 3000 };
+    const multipliers = { low: 1, medium: 2, high: 4 };
+    const extraCosts = { auth: 500, payments: 800, cms: 1000, analytics: 400 };
+
+    function updateEstimator(type, value) {
+        if (type === 'feature') {
+            estimatorState.features.includes(value) ? 
+                estimatorState.features = estimatorState.features.filter(f => f !== value) : 
+                estimatorState.features.push(value);
+        } else {
+            estimatorState[type] = value;
+        }
+        updateEstimatorDisplay();
+    }
+
+    function updateEstimatorDisplay() {
+        document.querySelectorAll('.estimator-btn').forEach(btn => {
+            const val = btn.getAttribute('data-value');
+            if (btn.classList.contains('service-btn')) {
+                btn.className = val === estimatorState.service ? "estimator-btn service-btn px-4 py-2 rounded-lg bg-cyan-600 text-white" : "estimator-btn service-btn px-4 py-2 rounded-lg bg-white/5 text-slate-400";
+            }
+            if (btn.classList.contains('complex-btn')) {
+                btn.className = val === estimatorState.complexity ? "estimator-btn complex-btn px-4 py-2 border border-cyan-500 text-cyan-400 bg-cyan-900/20 rounded-lg" : "estimator-btn complex-btn px-4 py-2 border border-white/10 text-slate-500 rounded-lg";
+            }
+        });
+
+        const featuresContainer = document.getElementById('estimator-features');
+        if(featuresContainer) {
+            featuresContainer.innerHTML = Object.keys(extraCosts).map(feat => `
+                <button onclick="updateEstimator('feature', '${feat}')" class="flex items-center gap-2 text-sm ${estimatorState.features.includes(feat) ? 'text-cyan-400' : 'text-slate-500'}">
+                    <div class="w-4 h-4 rounded border flex items-center justify-center ${estimatorState.features.includes(feat) ? 'bg-cyan-600 border-cyan-600' : 'border-slate-600'}">
+                        ${estimatorState.features.includes(feat) ? '<i data-lucide="check" class="text-white w-3 h-3"></i>' : ''}
+                    </div>
+                    <span class="capitalize">${feat}</span>
+                </button>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        let cost = baseRates[estimatorState.service] * multipliers[estimatorState.complexity];
+        estimatorState.features.forEach(f => cost += extraCosts[f]);
+        const display = document.getElementById('estimated-cost-display');
+        if(display) display.innerText = '₹' + cost.toLocaleString();
+    }
+
+    // --- 5. CONTACT FORM & AI POLISH ---
+    function polishMessage() {
+        const textarea = document.getElementById('contact-message');
+        const btn = document.getElementById('ai-polish-btn');
+        const text = textarea.value.trim();
+
+        if (text.length < 10) {
+            alert("Please type a bit more for AI to refine!");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> Refining...';
+        lucide.createIcons();
+
+        setTimeout(() => {
+            const prefixes = ["I'm looking to collaborate on ", "I'm interested in ", "I'd like to discuss "];
+            textarea.value = prefixes[Math.floor(Math.random() * prefixes.length)] + text.charAt(0).toLowerCase() + text.slice(1) + ". Let's connect soon!";
+            
+            btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> Polished!';
+            btn.classList.add('text-green-400', 'bg-green-400/10');
+            lucide.createIcons();
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="sparkles" class="w-3 h-3"></i> AI Polish';
+                btn.classList.remove('text-green-400', 'bg-green-400/10');
+                lucide.createIcons();
+            }, 3000);
+        }, 1000);
+    }
+
+    function initFormHandler() {
+        const form = document.getElementById('contact-form');
+        const status = document.getElementById('form-status');
+        const submitBtn = document.getElementById('submit-btn');
+
+        if(!form) return;
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Sending...';
+
+            try {
+                const response = await fetch(e.target.action, {
+                    method: 'POST',
+                    body: new FormData(e.target),
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    status.innerHTML = "Success! We'll get back to you shortly.";
+                    status.className = "text-center text-green-400 mt-4 block";
+                    form.reset();
+                } else { throw new Error(); }
+            } catch {
+                status.innerHTML = "Error sending message. Please try again.";
+                status.className = "text-center text-red-400 mt-4 block";
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Send Message';
+            }
+        });
+    }
+
+    // --- 6. ADMIN DASHBOARD LOGIC ---
+    // --- User Configuration ---
+const adminUsers = {
+    "Naveen-1425": "NaveenKitty",
+    "Yadhu Nandhini": "YadhuAmmu"
+};
+
+const SUPER_ADMIN_EMAIL = "naveenprasath144@gmail.com";
+let currentOTP = null;
+let isOtpFlow = false;
+
+// --- View Controller ---
+function switchView(viewName) {
+    // Hide all possible views
+    const views = ['website-view', 'admin-login-view', 'admin-dashboard-view'];
+    views.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.classList.add('hidden');
+    });
+
+    // Map keywords to IDs
+    let targetId = 'website-view';
+    if(viewName === 'login') targetId = 'admin-login-view';
+    if(viewName === 'dashboard') targetId = 'admin-dashboard-view';
+
+    const activeView = document.getElementById(targetId);
+    if(activeView) activeView.classList.remove('hidden');
+    
+    // Always reset form when switching back to login
+    if(viewName === 'login') resetToLogin();
+}
+
+// --- Login & Security Logic ---
+function handleAdminLogin(e) {
+    e.preventDefault();
+    const loginId = document.getElementById('login-id').value;
+    const passInput = document.getElementById('login-password').value;
+    const otpInput = document.getElementById('login-otp').value;
+    const errorMsg = document.getElementById('login-error');
+
+    if (isOtpFlow) {
+        if (otpInput === currentOTP) {
+            const newPass = prompt(`Verified! Enter new password for ${loginId}:`);
+            if (newPass) {
+                adminUsers[loginId] = newPass;
+                alert("Security Credentials Updated.");
+                resetToLogin();
+            }
+        } else {
+            showError("Invalid Security Code");
+        }
+        return;
+    }
+
+    // Check Login Credentials
+    if (adminUsers[loginId] && adminUsers[loginId] === passInput) {
+        switchView('dashboard');
+    } else {
+        showError("Access Denied: Invalid Credentials");
+    }
+}
+
+// --- OTP Initiation (Restricted to your Gmail) ---
+function initiatePasswordChange() {
+    const loginId = document.getElementById('login-id').value;
+    
+    if (loginId !== SUPER_ADMIN_EMAIL) {
+        showError("Unauthorized: Only " + SUPER_ADMIN_EMAIL + " can request a reset.");
+        return;
+    }
+
+    currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    isOtpFlow = true;
+
+    document.getElementById('password-field-container').classList.add('hidden');
+    document.getElementById('otp-field-container').classList.remove('hidden');
+    document.getElementById('admin-submit-btn').textContent = "Verify Security Code";
+    
+    alert(`[SYSTEM] Security code sent to ${SUPER_ADMIN_EMAIL}: ${currentOTP}`);
+}
+
+function resetToLogin() {
+    isOtpFlow = false;
+    document.getElementById('password-field-container').classList.remove('hidden');
+    document.getElementById('otp-field-container').classList.add('hidden');
+    document.getElementById('admin-submit-btn').textContent = "Unlock Dashboard";
+    document.getElementById('admin-login-form').reset();
+    document.getElementById('login-error').classList.add('hidden');
+}
+
+function showError(msg) {
+    const err = document.getElementById('login-error');
+    err.textContent = msg;
+    err.classList.remove('hidden');
+}    </script>
+</body>
+</html>
+
+
+
